@@ -10,6 +10,8 @@ import UIKit
 
 class SecondViewController: UIViewController,UITextFieldDelegate {
     
+    var commonDelegate:MainTabBarController?
+    
     @IBOutlet weak var locationTextField: UITextField?
 
     override func viewDidLoad() {
@@ -27,7 +29,7 @@ class SecondViewController: UIViewController,UITextFieldDelegate {
         self.locationTextField?.resignFirstResponder()
         var index = self.locationTextField?.text.toInt()
         
-        self.commonDelegate.changeBROptionsButtonLocationTo(index, animated:true)
+        self.commonDelegate?.changeBROptionsButtonLocationTo(index!, animated:true)
     }
     
     func textFieldShouldReturn(textField:UITextField) -> Bool {

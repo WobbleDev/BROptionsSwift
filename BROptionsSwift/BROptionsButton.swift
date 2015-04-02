@@ -9,13 +9,21 @@
 import UiKit
 import Foundation
 
+enum BROptionsButtonState {
+    case BROptionsButtonStateOpened  // after clicking the button, will be in open state
+    case BROptionsButtonStateClosed
+    case BROptionsButtonStateNormal   // it is undefined state usually closed
+}
+
 class BROptionsButton: UIButton {
     
+    /*
     enum BROptionsButtonState {
         case BROptionsButtonStateOpened  // after clicking the button, will be in open state
         case BROptionsButtonStateClosed
         case BROptionsButtonStateNormal   // it is undefined state usually closed
     }
+    */
     
     var dynamicsAnimator2 : UIDynamicAnimator
     var dynamicsAnimator : UIDynamicAnimator
@@ -30,7 +38,7 @@ class BROptionsButton: UIButton {
     
     var tabBar : UITabBar
     var locationIndexInTabBar : Int
-    var delegate : UITabBarController
+    var delegate : MainTabBarController
     var currentState : BROptionsButtonState
     var damping : CGFloat
     var frequency : CGFloat
@@ -38,7 +46,7 @@ class BROptionsButton: UIButton {
     
     //func initWithTabBar(tabBar : UITabBar, forItemIndex : NSUInteger, delegate : id) -> instancetype {
     //init(initWithIndex index:NSInteger) {
-    init(initWithTabBar tabBarz : UITabBar, forItemIndex : Int, delegatez : UITabBarController?) {
+    init(initWithTabBar tabBarz : UITabBar, forItemIndex : Int, delegatez : MainTabBarController?) {
     
         delegate = delegatez!
         tabBar = tabBarz
@@ -258,26 +266,30 @@ class BROptionsButton: UIButton {
         //NSAssert(numberOfItems > 0 , "number of items should be more than 0")
     
         var angle = 0.0
-        var radius = 20 * numberOfItems
-        angle = (180.0 / numberOfItems)
+        var radius:Int = 20 * numberOfItems
+        angle = (180.0 / Double(numberOfItems))
         // convert to radians
     
         angle = angle/180.0 * M_PI
     
         for(var i = 0; i<numberOfItems; i++) {
-            var buttonX = radius * cosf((angle * i) + angle/2)
-            var buttonY = radius * sinf((angle * i) + angle/2)
+            var csCalc = Float((angle * Double(i)) + (angle/2))
+            var buttonX = Float(radius) * cosf(csCalc)
+            var buttonY = Float(radius) * sinf(csCalc)
+            var wut = (angle * Double(i)) + (angle/2)
     
             var brOptionItem = self.createButtonItemAtIndex(i)
-            var mypoint = self.tabBar.superview.convertPoint(self.center, fromView:self.superview) //Check
-            var buttonPoint = CGPointMake(mypoint.x + buttonX, self.frame.origin.y -  buttonY)
+            var mypoint = self.tabBar.convertPoint(self.center, fromView:self.superview) //Check
+            var x = mypoint.x + CGFloat(buttonX)
+            var y = self.frame.origin.y - CGFloat(buttonY)
+            var buttonPoint = CGPointMake(x, y)
     
             brOptionItem.layer.anchorPoint = self.layer.anchorPoint
             brOptionItem.center = mypoint
     
             var attachment = UIAttachmentBehavior(item:brOptionItem, attachedToAnchor:buttonPoint)
             attachment.damping = self.damping
-            attachment.frequency = self.frequecny
+            attachment.frequency = self.frequency
             attachment.length = 1
         
             // set the attachment for dragging behavior
@@ -292,7 +304,7 @@ class BROptionsButton: UIButton {
                 self.delegate.brOptionsButton(self.willDisplayButtonItem(brOptionItem))
             }
         
-            self.tabBar.superview.insertSubview(brOptionItem,self.tabBar)
+            self.tabBar.insertSubview(brOptionItem,self.tabBar)
             self.dynamicsAnimator.addBehavior(attachment)
             self.items.addObject(brOptionItem)
         }

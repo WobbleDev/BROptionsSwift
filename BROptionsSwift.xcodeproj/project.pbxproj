@@ -20,6 +20,7 @@
 		51B371001ABA7C980072C9D5 /* BROptionsItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B370FF1ABA7C980072C9D5 /* BROptionsItem.swift */; };
 		51B371021ABA7E5B0072C9D5 /* ThirdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B371011ABA7E5B0072C9D5 /* ThirdViewController.swift */; };
 		51B371041ABE732F0072C9D5 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B371031ABE732F0072C9D5 /* MainTabBarController.swift */; };
+		51B371061ACB91650072C9D5 /* BROptionButtonDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B371051ACB91650072C9D5 /* BROptionButtonDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +51,7 @@
 		51B370FF1ABA7C980072C9D5 /* BROptionsItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BROptionsItem.swift; sourceTree = "<group>"; };
 		51B371011ABA7E5B0072C9D5 /* ThirdViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThirdViewController.swift; sourceTree = "<group>"; };
 		51B371031ABE732F0072C9D5 /* MainTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
+		51B371051ACB91650072C9D5 /* BROptionButtonDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BROptionButtonDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +106,7 @@
 				51B370FF1ABA7C980072C9D5 /* BROptionsItem.swift */,
 				51B371011ABA7E5B0072C9D5 /* ThirdViewController.swift */,
 				51B371031ABE732F0072C9D5 /* MainTabBarController.swift */,
+				51B371051ACB91650072C9D5 /* BROptionButtonDelegate.swift */,
 			);
 			path = BROptionsSwift;
 			sourceTree = "<group>";
@@ -238,6 +241,7 @@
 				51B370FE1ABA7C810072C9D5 /* BROptionsButton.swift in Sources */,
 				51B370DA1AB91D450072C9D5 /* SecondViewController.swift in Sources */,
 				51B370D61AB91D450072C9D5 /* AppDelegate.swift in Sources */,
+				51B371061ACB91650072C9D5 /* BROptionButtonDelegate.swift in Sources */,
 				51B371041ABE732F0072C9D5 /* MainTabBarController.swift in Sources */,
 				51B371021ABA7E5B0072C9D5 /* ThirdViewController.swift in Sources */,
 				51B370D81AB91D450072C9D5 /* FirstViewController.swift in Sources */,
