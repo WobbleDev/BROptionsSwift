@@ -25,14 +25,14 @@ class BROptionsButton: UIButton {
     }
     */
     
-    var dynamicsAnimator2 : UIDynamicAnimator
-    var dynamicsAnimator : UIDynamicAnimator
-    var attachmentBehavior : UIAttachmentBehavior
-    var gravityBehavior : UIGravityBehavior
-    var collisionBehavior : UICollisionBehavior
-    var dynamicItem : UIDynamicItemBehavior
-    var openedStateImage : UIImageView
-    var closedStateImage : UIImageView
+    var dynamicsAnimator2 : UIDynamicAnimator?
+    var dynamicsAnimator : UIDynamicAnimator?
+    var attachmentBehavior : UIAttachmentBehavior?
+    var gravityBehavior : UIGravityBehavior?
+    var collisionBehavior : UICollisionBehavior?
+    var dynamicItem : UIDynamicItemBehavior?
+    var openedStateImage : UIImageView?
+    var closedStateImage : UIImageView?
     var items : NSMutableArray
     var blackView : UIView
     
@@ -56,6 +56,8 @@ class BROptionsButton: UIButton {
         currentState = BROptionsButtonState.BROptionsButtonStateNormal
         items = NSMutableArray()
     
+        super.init()
+        
         self.installTheButton()
         self.autoresizingMask = UIViewAutoresizing.FlexibleLeftMargin | UIViewAutoresizing.FlexibleRightMargin |
             UIViewAutoresizing.FlexibleTopMargin | UIViewAutoresizing.FlexibleBottomMargin;
@@ -91,7 +93,7 @@ class BROptionsButton: UIButton {
             //self.gravityBehavior.gravityDirection = CGVectorMake(0.0, -20);
             self.dynamicsAnimator = UIDynamicAnimator(referenceView:self.tabBar);
             self.dynamicItem = UIDynamicItemBehavior()
-            self.dynamicItem.allowsRotation = false;
+            self.dynamicItem?.allowsRotation = false;
             
             //self.collisionBehavior = [[UICollisionBehavior alloc] init];
             //self.collisionBehavior.translatesReferenceBoundsIntoBoundary = YES;
@@ -134,12 +136,12 @@ class BROptionsButton: UIButton {
     
         if(state == BROptionsButtonState.BROptionsButtonStateClosed || state == BROptionsButtonState.BROptionsButtonStateNormal) {
             self.openedStateImage = imgV;
-            self.addSubview(self.openedStateImage);
+            self.addSubview(self.openedStateImage!);
         } else {
             self.closedStateImage = imgV;
             self.closedStateImage.center = CGPointMake(self.closedStateImage.center.x,
             self.frame.size.height + (self.closedStateImage.frame.size.height/2))
-            self.addSubview(self.closedStateImage)
+            self.addSubview(self.closedStateImage!)
         }
     
     }
@@ -208,8 +210,8 @@ class BROptionsButton: UIButton {
         var snapBehaviour2 = UISnapBehavior(item:self.openedStateImage, snapToPoint:openImgCenter)
         snapBehaviour.damping = 0.78;
         snapBehaviour2.damping = 0.78;
-        self.dynamicsAnimator2.addBehavior(snapBehaviour)
-        self.dynamicsAnimator2.addBehavior(snapBehaviour2)
+        self.dynamicsAnimator2?.addBehavior(snapBehaviour)
+        self.dynamicsAnimator2?.addBehavior(snapBehaviour2)
     }
     
     func addBlackView() {
@@ -301,10 +303,11 @@ class BROptionsButton: UIButton {
             //}
                 
             if(self.delegate.respondsToSelector("willDisplayButtonItem:")) { //Fix me
-                self.delegate.brOptionsButton(self.willDisplayButtonItem(brOptionItem))
+                self.delegate.brOptionsButton(self, willDisplayButtonItem:brOptionItem)
             }
         
-            self.tabBar.insertSubview(brOptionItem,self.tabBar)
+            self.tabBar.insertSubview(brOptionItem, belowSubview: self.tabBar)
+
             self.dynamicsAnimator.addBehavior(attachment)
             self.items.addObject(brOptionItem)
         }
@@ -321,16 +324,16 @@ class BROptionsButton: UIButton {
         
     //  if([self.delegate respondsToSelector:@selector(brOptionsButton:imageForItemAtIndex:)]) { //FIX ME
         if(self.delegate.respondsToSelector("imageForItemAtIndex:")) { //FIX ME
-            var image = self.delegate.brOptionsButton(self.imageForItemAtIndex(index))
-            if(image) {
-                brOptionItem.setImage(image, UIControlStateNormal)
+            var image = self.delegate.brOptionsButton(self, imageForItemAtIndex:indexz)
+            if((image) != nil) {
+                brOptionItem.setImage(image, forState: UIControlState.Normal)
             }
         }
         
         if(self.delegate.respondsToSelector("titleForItemAtIndex:")) { //FIX ME
-            var buttonTitle = self.delegate.brOptionsButton(self, titleForItemAtIndex:index)
-            if(buttonTitle.length) {
-                brOptionItem.setTitle(buttonTitle, forState:UIControlStateNormal)
+            var buttonTitle = self.delegate.brOptionsButton(self, titleForItemAtIndex:indexz)
+            if(buttonTitle.utf16Count > 0) {
+                brOptionItem.setTitle(buttonTitle, forState:UIControlState.Normal)
             }
         }
         return brOptionItem;
@@ -378,7 +381,7 @@ class BROptionsButton: UIButton {
         self.dynamicsAnimator.removeBehavior(button.attachment)
         self.buttonPressed()
         
-        self.delegate.brOptionsButton(self.didSelectItem(button))
+        self.delegate.brOptionsButton(self, didSelectItem:button)
         
         UIView.animateWithDuration(0.3, animations:{
             self.layoutIfNeeded()

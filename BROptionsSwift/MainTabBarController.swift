@@ -8,7 +8,7 @@
 
 import UiKit
 
-class MainTabBarController: UITabBarController, BROptionButtonDelegate, CommonDelegate {
+class MainTabBarController: UITabBarController, BROptionButtonDelegate ,CommonDelegate { //BROptionButtonDelegate,
 
     var brOptionsButton:BROptionsButton
     
@@ -32,30 +32,27 @@ class MainTabBarController: UITabBarController, BROptionButtonDelegate, CommonDe
         //brOption.setImage(UIImage(named:"close"), forBROptionsButtonState:BROptionsButtonState.BROptionsButtonStateOpened)
     }
 
-    func brOptionsButtonNumberOfItems(brOptionsButton:BROptionsButton) -> NSInteger {
+    func brOptionsButton(brOptionsButton: BROptionsButton!, didSelectItem: BROptionsItem!) {
+        self.selectedIndex = brOptionsButton.locationIndexInTabBar
+    }
+    
+    func brOptionsButtonNumberOfItems(brOptionsButton:BROptionsButton!) -> Int {
         return 6
+    }
+    
+    func brOptionsButton(optionsButton: BROptionsButton!, willDisplayButtonItem: BROptionsItem!)
+    {
+        println("None")
+    }
+    
+    func brOptionsButton(brOptionsButton: BROptionsButton!, titleForItemAtIndex: Int) -> String {
+        return "None"
     }
     
     func brOptionsButton(brOptionsButton: BROptionsButton!, imageForItemAtIndex: Int) -> UIImage! {
         var image = UIImage(named: "Apple")
         return image
     }
-    
-    
-    func brOptionsButton(brOptionsButton: BROptionsButton!, didSelectItem: BROptionsItem!) {
-        self.selectedIndex = brOptionsButton.locationIndexInTabBar
-    }
-    
-    func brOptionsButton(optionsButton: BROptionsButton!, willDisplayButtonItem: BROptionsItem!)
-    {
-
-    }
-    
-    func brOptionsButton(brOptionsButton: BROptionsButton!, titleForItemAtIndex: Int) -> String
-    {
-    
-    }
-
     
     func changeBROptionsButtonLocationTo(location: Int, animated: Bool){
         if(location < self.tabBar.items?.count) {
