@@ -10,16 +10,21 @@ import UiKit
 
 class MainTabBarController: UITabBarController, BROptionButtonDelegate ,CommonDelegate { //BROptionButtonDelegate,
 
-    var brOptionsButton:BROptionsButton
+    var brOptionsButton:BROptionsButton?
     
     required init(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        //fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let viewControllers: [UIViewController] = self.navigationController!.viewControllers as [UIViewController];
+        //let viewControllers: [UIViewController] = self.navigationController!.viewControllers as [UIViewController];
+        //var second = viewControllers[1] as SecondViewController
+        
+        var viewControllers = self.tabBarController!.viewControllers as [UIViewController]
         var second = viewControllers[1] as SecondViewController
+        
         second.commonDelegate = self
         
         // Do any additional setup after loading the view.
@@ -56,7 +61,7 @@ class MainTabBarController: UITabBarController, BROptionButtonDelegate ,CommonDe
     
     func changeBROptionsButtonLocationTo(location: Int, animated: Bool){
         if(location < self.tabBar.items?.count) {
-            self.brOptionsButton.setLocationIndexInTabBar(location, animated:true)
+            self.brOptionsButton!.setLocationIndexInTabBar(location, animated:true)
         } else {
             var alert = UIAlertView(title: "", message: "wrong index", delegate: nil, cancelButtonTitle: "OK")
             alert.show()
