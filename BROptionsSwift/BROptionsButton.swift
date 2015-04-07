@@ -34,7 +34,7 @@ class BROptionsButton: UIButton {
     var openedStateImage : UIImageView?
     var closedStateImage : UIImageView?
     var items : NSMutableArray
-    var blackView : UIView
+    var blackView : UIView?
     
     var tabBar : UITabBar
     var locationIndexInTabBar : Int
@@ -139,8 +139,8 @@ class BROptionsButton: UIButton {
             self.addSubview(self.openedStateImage!);
         } else {
             self.closedStateImage = imgV;
-            self.closedStateImage.center = CGPointMake(self.closedStateImage.center.x,
-            self.frame.size.height + (self.closedStateImage.frame.size.height/2))
+            self.closedStateImage!.center = CGPointMake(self.closedStateImage!.center.x,
+            self.frame.size.height + (self.closedStateImage!.frame.size.height/2))
             self.addSubview(self.closedStateImage!)
         }
     
@@ -187,27 +187,27 @@ class BROptionsButton: UIButton {
     
     func changeTheButtonStateAnimatedToOpen(open:NSNumber) {
     
-        var openImgCenter = self.openedStateImage.center
-        var closedImgCenter = self.closedStateImage.center
+        var openImgCenter = self.openedStateImage!.center
+        var closedImgCenter = self.closedStateImage!.center
     
         if(open.boolValue) {
-            openImgCenter.y = ((self.openedStateImage.frame.size.height/2) * -1)
+            openImgCenter.y = ((self.openedStateImage!.frame.size.height/2) * -1)
             closedImgCenter.y = self.frame.size.height/2
             closedImgCenter.x = self.frame.size.width/2
             self.addBlackView()
         } else {
             openImgCenter.y = self.frame.size.height/2
-            closedImgCenter.y = self.frame.size.height + self.closedStateImage.frame.size.height/2
+            closedImgCenter.y = self.frame.size.height + self.closedStateImage!.frame.size.height/2
             self.removeBlackView()
         }
     
-        self.openedStateImage.center = CGPointMake(self.frame.size.width/2, self.openedStateImage.center.y);
-        self.closedStateImage.center = CGPointMake((self.frame.size.width/2) , self.closedStateImage.center.y);
+        self.openedStateImage!.center = CGPointMake(self.frame.size.width/2, self.openedStateImage!.center.y);
+        self.closedStateImage!.center = CGPointMake((self.frame.size.width/2) , self.closedStateImage!.center.y);
     
         self.dynamicsAnimator2 = UIDynamicAnimator(referenceView:self)
     
-        var snapBehaviour = UISnapBehavior(item:self.closedStateImage, snapToPoint:closedImgCenter)
-        var snapBehaviour2 = UISnapBehavior(item:self.openedStateImage, snapToPoint:openImgCenter)
+        var snapBehaviour = UISnapBehavior(item:self.closedStateImage!, snapToPoint:closedImgCenter)
+        var snapBehaviour2 = UISnapBehavior(item:self.openedStateImage!, snapToPoint:openImgCenter)
         snapBehaviour.damping = 0.78;
         snapBehaviour2.damping = 0.78;
         self.dynamicsAnimator2?.addBehavior(snapBehaviour)
@@ -218,22 +218,22 @@ class BROptionsButton: UIButton {
     
         self.enabled = false;
         self.blackView = UIView(frame:self.tabBar.bounds)
-        self.blackView.autoresizingMask = UIViewAutoresizing.FlexibleLeftMargin |
+        self.blackView!.autoresizingMask = UIViewAutoresizing.FlexibleLeftMargin |
             UIViewAutoresizing.FlexibleRightMargin |
             UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight |
             UIViewAutoresizing.FlexibleTopMargin |
             UIViewAutoresizing.FlexibleBottomMargin
-        self.blackView.setTranslatesAutoresizingMaskIntoConstraints(true)
+        self.blackView!.setTranslatesAutoresizingMaskIntoConstraints(true)
     
-        self.blackView.backgroundColor = UIColor.blackColor()
-        self.blackView.alpha = 0.0;
+        self.blackView!.backgroundColor = UIColor.blackColor()
+        self.blackView!.alpha = 0.0;
         var tap = UITapGestureRecognizer(target:self, action:"blackViewPressed")
-        self.blackView.addGestureRecognizer(tap)
+        self.blackView!.addGestureRecognizer(tap)
     
         
-        self.tabBar.insertSubview(self.blackView, belowSubview: self.tabBar)
+        self.tabBar.insertSubview(self.blackView!, belowSubview: self.tabBar)
         UIView.animateWithDuration(0.3, animations:{
-                self.blackView.alpha = 0.7;
+                self.blackView!.alpha = 0.7;
             }, completion:{
              (finished: Bool) in //Fix me
                 if(finished){
@@ -246,12 +246,12 @@ class BROptionsButton: UIButton {
     
     self.enabled = false;
     UIView.animateWithDuration(0.3, animations:{
-        self.blackView.alpha = 0.0
+        self.blackView!.alpha = 0.0
     }, completion:
         {
             (finished: Bool) in
             if(finished) {
-                self.blackView.removeFromSuperview()
+                self.blackView!.removeFromSuperview()
                 //self.blackView = nil; //CHECK
                 self.enabled = false;
             }
@@ -296,7 +296,7 @@ class BROptionsButton: UIButton {
         
             // set the attachment for dragging behavior
             brOptionItem.attachment = attachment
-            self.dynamicItem.addItem(brOptionItem)
+            self.dynamicItem!.addItem(brOptionItem)
         
             //if([self.delegate respondsToSelector:@selector(brOptionsButton:willDisplayButtonItem:)]) {
             //    [self.delegate brOptionsButton:self willDisplayButtonItem:brOptionItem];
@@ -308,7 +308,7 @@ class BROptionsButton: UIButton {
         
             self.tabBar.insertSubview(brOptionItem, belowSubview: self.tabBar)
 
-            self.dynamicsAnimator.addBehavior(attachment)
+            self.dynamicsAnimator!.addBehavior(attachment)
             self.items.addObject(brOptionItem)
         }
     }
@@ -341,7 +341,7 @@ class BROptionsButton: UIButton {
     
     func hideButtons() {
     
-        self.dynamicsAnimator.removeAllBehaviors()
+        self.dynamicsAnimator!.removeAllBehaviors()
         
         dispatch_async(dispatch_get_main_queue(), {
         
@@ -378,7 +378,7 @@ class BROptionsButton: UIButton {
         
         // removing the object will not animate it with others
         self.items.removeObject(button)
-        self.dynamicsAnimator.removeBehavior(button.attachment)
+        self.dynamicsAnimator!.removeBehavior(button.attachment)
         self.buttonPressed()
         
         self.delegate.brOptionsButton(self, didSelectItem:button)
