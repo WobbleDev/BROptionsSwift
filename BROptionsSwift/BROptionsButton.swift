@@ -9,6 +9,9 @@
 import UiKit
 import Foundation
 
+let kBROptionsItemDefaultItemHeight:CGFloat = 40.0
+var timer :NSTimer!
+
 enum BROptionsButtonState {
     case BROptionsButtonStateOpened  // after clicking the button, will be in open state
     case BROptionsButtonStateClosed
@@ -46,6 +49,20 @@ class BROptionsButton: UIButton {
     
     //func initWithTabBar(tabBar : UITabBar, forItemIndex : NSUInteger, delegate : id) -> instancetype {
     //init(initWithIndex index:NSInteger) {
+    
+    required init(coder aDecoder: NSCoder) {
+        
+        tabBar = UITabBar()
+        locationIndexInTabBar = 0
+        delegate = MainTabBarController(coder: aDecoder)
+        currentState = BROptionsButtonState.BROptionsButtonStateNormal
+        damping = 0
+        frequency = 0
+        items = NSMutableArray()
+        
+        super.init(coder: aDecoder)
+    }
+    
     init(initWithTabBar tabBarz : UITabBar, forItemIndex : Int, delegatez : MainTabBarController?) {
     
         delegate = delegatez!
@@ -55,8 +72,8 @@ class BROptionsButton: UIButton {
         frequency = 4
         currentState = BROptionsButtonState.BROptionsButtonStateNormal
         items = NSMutableArray()
-    
-        super.init()
+        
+        super.init(frame: CGRect(x: 0, y: 0, width: kBROptionsItemDefaultItemHeight, height: kBROptionsItemDefaultItemHeight))
         
         self.installTheButton()
         self.autoresizingMask = UIViewAutoresizing.FlexibleLeftMargin | UIViewAutoresizing.FlexibleRightMargin |
@@ -64,9 +81,6 @@ class BROptionsButton: UIButton {
         //self.translatesAutoresizingMaskIntoConstraints = true;
     }
 
-    required init(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
 
     func installTheButton() {
         var reason = "The selected index \(self.locationIndexInTabBar) is out of bounds for tabBar.items = \(self.tabBar.items?.count)"
@@ -86,7 +100,7 @@ class BROptionsButton: UIButton {
             self.layer.cornerRadius = 6;
             self.clipsToBounds = true;
             self.tabBar.addSubview(self);
-            self.addTarget(self, action: "buttonPressed:", forControlEvents: .TouchUpInside)
+            self.addTarget(self, action: "buttonPressed", forControlEvents: .TouchUpInside)
             
             // Dynamic stuff
             //self.gravityBehavior = [[UIGravityBehavior alloc] init];
@@ -101,7 +115,7 @@ class BROptionsButton: UIButton {
             //[self.dynamicsAnimator addBehavior:self.gravityBehavior];
             self.tabBar.addObserver(self, forKeyPath:"selectedItem", options:NSKeyValueObservingOptions.Old | NSKeyValueObservingOptions.New, context:nil)
             
-            NSNotificationCenter.defaultCenter().addObserver(self, selector: "orientationChanged:", name: UIDeviceOrientationDidChangeNotification, object: nil)
+            //NSNotificationCenter.defaultCenter().addObserver(self, selector: "rotated", name: UIDeviceOrientationDidChangeNotification, object: nil)
         }
 
     }
@@ -181,7 +195,7 @@ class BROptionsButton: UIButton {
         } else {
             currentState = BROptionsButtonState.BROptionsButtonStateClosed;
             self.hideButtons()
-            var timer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: Selector("changeTheButtonStateAnimatedToOpen"), userInfo: nil, repeats: false)
+            var timer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: Selector("changeTheButtonStateAnimatedToOpenT:"), userInfo: false, repeats: false)
         }
     }
     
@@ -213,6 +227,37 @@ class BROptionsButton: UIButton {
         self.dynamicsAnimator2?.addBehavior(snapBehaviour)
         self.dynamicsAnimator2?.addBehavior(snapBehaviour2)
     }
+    
+    //For timer
+    func changeTheButtonStateAnimatedToOpenT(timer:NSTimer) {
+        
+        var openImgCenter = self.openedStateImage!.center
+        var closedImgCenter = self.closedStateImage!.center
+        
+        if(timer.userInfo as Bool) {
+            openImgCenter.y = ((self.openedStateImage!.frame.size.height/2) * -1)
+            closedImgCenter.y = self.frame.size.height/2
+            closedImgCenter.x = self.frame.size.width/2
+            self.addBlackView()
+        } else {
+            openImgCenter.y = self.frame.size.height/2
+            closedImgCenter.y = self.frame.size.height + self.closedStateImage!.frame.size.height/2
+            self.removeBlackView()
+        }
+        
+        self.openedStateImage!.center = CGPointMake(self.frame.size.width/2, self.openedStateImage!.center.y);
+        self.closedStateImage!.center = CGPointMake((self.frame.size.width/2) , self.closedStateImage!.center.y);
+        
+        self.dynamicsAnimator2 = UIDynamicAnimator(referenceView:self)
+        
+        var snapBehaviour = UISnapBehavior(item:self.closedStateImage!, snapToPoint:closedImgCenter)
+        var snapBehaviour2 = UISnapBehavior(item:self.openedStateImage!, snapToPoint:openImgCenter)
+        snapBehaviour.damping = 0.78;
+        snapBehaviour2.damping = 0.78;
+        self.dynamicsAnimator2?.addBehavior(snapBehaviour)
+        self.dynamicsAnimator2?.addBehavior(snapBehaviour2)
+    }
+
     
     func addBlackView() {
     
@@ -302,9 +347,9 @@ class BROptionsButton: UIButton {
             //    [self.delegate brOptionsButton:self willDisplayButtonItem:brOptionItem];
             //}
                 
-            if(self.delegate.respondsToSelector("willDisplayButtonItem:")) { //Fix me
+            //if(self.delegate.respondsToSelector("willDisplayButtonItem")) { //Fix me
                 self.delegate.brOptionsButton(self, willDisplayButtonItem:brOptionItem)
-            }
+            //}
         
             self.tabBar.insertSubview(brOptionItem, belowSubview: self.tabBar)
 
@@ -323,19 +368,19 @@ class BROptionsButton: UIButton {
         brOptionItem.autoresizingMask = UIViewAutoresizing.None
         
     //  if([self.delegate respondsToSelector:@selector(brOptionsButton:imageForItemAtIndex:)]) { //FIX ME
-        if(self.delegate.respondsToSelector("imageForItemAtIndex:")) { //FIX ME
+        //if(self.delegate.respondsToSelector("imageForItemAtIndex")) { //FIX ME
             var image = self.delegate.brOptionsButton(self, imageForItemAtIndex:indexz)
             if((image) != nil) {
                 brOptionItem.setImage(image, forState: UIControlState.Normal)
             }
-        }
+        //}
         
-        if(self.delegate.respondsToSelector("titleForItemAtIndex:")) { //FIX ME
+        //if(self.delegate.respondsToSelector("titleForItemAtIndex")) { //FIX ME
             var buttonTitle = self.delegate.brOptionsButton(self, titleForItemAtIndex:indexz)
             if(buttonTitle.utf16Count > 0) {
                 brOptionItem.setTitle(buttonTitle, forState:UIControlState.Normal)
             }
-        }
+        //}
         return brOptionItem;
     }
     

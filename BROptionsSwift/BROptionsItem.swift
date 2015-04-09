@@ -21,14 +21,19 @@ class BROptionsItem: UIButton {
     var index:NSInteger?
     
     init(initWithIndex indexz:NSInteger) {
-        super.init()
         index = indexz
+        super.init(frame: CGRectMake(0.0, 0.0, kBROptionsItemDefaultItemHeight, kBROptionsItemDefaultItemHeight))
+        self.LayoutTheButton()
     }
     
+    /*
     override init(){
-        super.init(frame:CGRectMake(0.0, 0.0, kBROptionsItemDefaultItemHeight, kBROptionsItemDefaultItemHeight))
-            self.LayoutTheButton()
+        super.init(frame: CGRectMake(0.0, 0.0, kBROptionsItemDefaultItemHeight, kBROptionsItemDefaultItemHeight))
+        //super.init(frame:CGRectMake(0.0, 0.0, kBROptionsItemDefaultItemHeight, kBROptionsItemDefaultItemHeight))
+        self.LayoutTheButton()
+        
     }
+    */
 
     required init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

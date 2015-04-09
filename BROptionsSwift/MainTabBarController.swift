@@ -8,7 +8,7 @@
 
 import UiKit
 
-class MainTabBarController: UITabBarController, BROptionButtonDelegate ,CommonDelegate { //BROptionButtonDelegate,
+class MainTabBarController: UITabBarController,BROptionButtonDelegate,CommonDelegate { //BROptionButtonDelegate,
 
     var brOptionsButton:BROptionsButton?
     
@@ -22,8 +22,9 @@ class MainTabBarController: UITabBarController, BROptionButtonDelegate ,CommonDe
         //let viewControllers: [UIViewController] = self.navigationController!.viewControllers as [UIViewController];
         //var second = viewControllers[1] as SecondViewController
         
-        var viewControllers = self.tabBarController!.viewControllers as [UIViewController]
-        var second = viewControllers[1] as SecondViewController
+        //println("\(self.viewController?)")
+        var viewControllers = self.viewControllers?
+        var second = viewControllers?[1] as SecondViewController
         
         second.commonDelegate = self
         
