@@ -43,15 +43,16 @@ class MainTabBarController: UITabBarController,BROptionButtonDelegate,CommonDele
     }
     
     func brOptionsButtonNumberOfItems(brOptionsButton:BROptionsButton!) -> Int {
-        return 6
+        return 3
     }
     
     func brOptionsButton(optionsButton: BROptionsButton!, willDisplayButtonItem: BROptionsItem!)
     {
-        println("None")
+        //println("WillDisplayButtonItem")
     }
     
     func brOptionsButton(brOptionsButton: BROptionsButton!, titleForItemAtIndex: Int) -> String {
+        //println("TitleForItemAtIndex")
         return "None"
     }
     
