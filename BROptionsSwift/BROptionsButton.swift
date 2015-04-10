@@ -92,9 +92,10 @@ class BROptionsButton: UIButton {
             var item = self.tabBar.items?[self.locationIndexInTabBar] as UITabBarItem
             item.enabled = false
             var pointToSuperview = self.buttonLocationForIndex(self.locationIndexInTabBar)
-            var myRect = CGRectMake(pointToSuperview.x, pointToSuperview.y, 60, 60);
-            self.frame = myRect;
-            self.center = pointToSuperview;
+            var myRect = CGRectMake(pointToSuperview.x, pointToSuperview.y, 60, 60)
+            self.frame = myRect
+            self.center = pointToSuperview
+
             // self.layer.anchorPoint = CGPointMake(1, 1);
             self.backgroundColor = UIColor.blackColor()
             self.layer.cornerRadius = 6;
@@ -233,6 +234,7 @@ class BROptionsButton: UIButton {
     //For timer
     func changeTheButtonStateAnimatedToOpenT(timer:NSTimer) {
         
+        println("Wut")
         var openImgCenter = self.openedStateImage!.center
         var closedImgCenter = self.closedStateImage!.center
         
@@ -258,6 +260,8 @@ class BROptionsButton: UIButton {
         snapBehaviour2.damping = 0.78;
         self.dynamicsAnimator2?.addBehavior(snapBehaviour)
         self.dynamicsAnimator2?.addBehavior(snapBehaviour2)
+        
+        //installTheButton() //FIX ME
     }
 
     
@@ -291,6 +295,7 @@ class BROptionsButton: UIButton {
 
     func removeBlackView() {
     
+        println("Remove Black view")
     self.enabled = false;
     UIView.animateWithDuration(0.3, animations:{
         self.blackView!.alpha = 0.0
@@ -300,7 +305,7 @@ class BROptionsButton: UIButton {
             if(finished) {
                 self.blackView!.removeFromSuperview()
                 //self.blackView = nil; //CHECK
-                self.enabled = false;
+                self.enabled = true;
             }
         });
     }
@@ -344,13 +349,9 @@ class BROptionsButton: UIButton {
             // set the attachment for dragging behavior
             brOptionItem.attachment = attachment
             self.dynamicItem!.addItem(brOptionItem)
-        
-            //if([self.delegate respondsToSelector:@selector(brOptionsButton:willDisplayButtonItem:)]) {
-            //    [self.delegate brOptionsButton:self willDisplayButtonItem:brOptionItem];
-            //}
                 
             //if(self.delegate.respondsToSelector("willDisplayButtonItem")) { //Fix me
-                self.delegate.brOptionsButton(self, willDisplayButtonItem:brOptionItem)
+                //self.delegate.brOptionsButton(self, willDisplayButtonItem:brOptionItem)
             //}
         
             self.tabBar.insertSubview(brOptionItem, belowSubview: self.tabBar)
@@ -371,20 +372,18 @@ class BROptionsButton: UIButton {
         brOptionItem.addTarget(self, action:"buttonItemPressed:", forControlEvents:.TouchUpInside)
         brOptionItem.autoresizingMask = UIViewAutoresizing.None
         
-    //  if([self.delegate respondsToSelector:@selector(brOptionsButton:imageForItemAtIndex:)]) { //FIX ME
-        //if(self.delegate.respondsToSelector("imageForItemAtIndex")) { //FIX ME
+            /*
             var image = self.delegate.brOptionsButton(self, imageForItemAtIndex:indexz)
             if((image) != nil) {
                 brOptionItem.setImage(image, forState: UIControlState.Normal)
             }
-        //}
         
-        //if(self.delegate.respondsToSelector("titleForItemAtIndex")) { //FIX ME
             var buttonTitle = self.delegate.brOptionsButton(self, titleForItemAtIndex:indexz)
             if(buttonTitle.utf16Count > 0) {
                 brOptionItem.setTitle(buttonTitle, forState:UIControlState.Normal)
             }
-        //}
+            */
+        
         return brOptionItem;
     }
     
