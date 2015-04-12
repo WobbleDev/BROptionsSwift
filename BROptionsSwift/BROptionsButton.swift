@@ -8,6 +8,7 @@
 
 import UiKit
 import Foundation
+import CoreMotion
 
 let kBROptionsItemDefaultItemHeight:CGFloat = 40.0
 var timer :NSTimer!
@@ -337,6 +338,8 @@ class BROptionsButton: UIButton {
             var x = mypoint.x + CGFloat(buttonX)
             var y = self.frame.origin.y - CGFloat(buttonY)
             var buttonPoint = CGPointMake(x, y)
+            
+            //println("Button Point of Button Item x:\(x) y: \(y)")
     
             brOptionItem.layer.anchorPoint = self.layer.anchorPoint
             brOptionItem.center = mypoint
@@ -358,6 +361,8 @@ class BROptionsButton: UIButton {
 
             self.dynamicsAnimator!.addBehavior(attachment)
             self.items.addObject(brOptionItem)
+            
+
         }
     }
     
@@ -372,12 +377,13 @@ class BROptionsButton: UIButton {
         brOptionItem.addTarget(self, action:"buttonItemPressed:", forControlEvents:.TouchUpInside)
         brOptionItem.autoresizingMask = UIViewAutoresizing.None
         
-            /*
-            var image = self.delegate.brOptionsButton(self, imageForItemAtIndex:indexz)
-            if((image) != nil) {
-                brOptionItem.setImage(image, forState: UIControlState.Normal)
-            }
         
+            var image = self.delegate.brOptionsButton(self, imageForItemAtIndex:indexz)
+            //if((image) != nil) {
+                brOptionItem.setImage(image, forState: UIControlState.Normal)
+            //}
+        
+            /*
             var buttonTitle = self.delegate.brOptionsButton(self, titleForItemAtIndex:indexz)
             if(buttonTitle.utf16Count > 0) {
                 brOptionItem.setTitle(buttonTitle, forState:UIControlState.Normal)
@@ -445,6 +451,5 @@ class BROptionsButton: UIButton {
             }
         })
     }
-
 
 }

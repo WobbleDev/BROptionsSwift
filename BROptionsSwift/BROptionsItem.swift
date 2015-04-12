@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreMotion
+import Foundation
 
 class BROptionsItem: UIButton {
 
@@ -21,6 +22,7 @@ class BROptionsItem: UIButton {
     var index:NSInteger?
     
     init(initWithIndex indexz:NSInteger) {
+        println("INIT BUTTON \(indexz)")
         index = indexz
         super.init(frame: CGRectMake(0.0, 0.0, kBROptionsItemDefaultItemHeight, kBROptionsItemDefaultItemHeight))
         self.LayoutTheButton()
@@ -36,7 +38,7 @@ class BROptionsItem: UIButton {
     */
 
     required init(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
     }
     
     func LayoutTheButton() {
@@ -58,10 +60,12 @@ class BROptionsItem: UIButton {
     
     //TODO: override setCenter or setFrame
     
-    func touchesBegan(touches:NSSet, event:UIEvent) {
     
+    override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
+        
+        println("Wut")
         for touch: AnyObject in touches {
-        //var touch = touches.anyObject()
+            //var touch = touches.anyObject()
             var location = touch.locationInView(self.superview)
             location.x += (self.frame.size.width/2);
             location.y += (self.frame.size.height/2);
@@ -74,9 +78,10 @@ class BROptionsItem: UIButton {
             // remove the old behavior
             animator?.removeBehavior(self.attachment)
         }
+
     }
     
-    func touchesMoved(touches:NSSet, event:UIEvent) {
+    override func touchesMoved(touches: NSSet, withEvent event: UIEvent) {
         // move the attachment
         for touch: AnyObject in touches {
             //var touch = touches.anyObject()
@@ -89,9 +94,10 @@ class BROptionsItem: UIButton {
             
             self.highlighted = false;
         }
+
     }
     
-    func touchesEnded(touches:NSSet, event:UIEvent){
+    override func touchesEnded(touches: NSSet, withEvent event: UIEvent) {
         // remove the attachment
         var animator = self.dragAttachement?.dynamicAnimator
         
@@ -104,6 +110,7 @@ class BROptionsItem: UIButton {
         }
         self.highlighted = false;
     }
+
     
     /*
     override func dealloc() {
