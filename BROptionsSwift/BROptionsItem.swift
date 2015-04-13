@@ -22,7 +22,6 @@ class BROptionsItem: UIButton {
     var index:NSInteger?
     
     init(initWithIndex indexz:NSInteger) {
-        println("INIT BUTTON \(indexz)")
         index = indexz
         super.init(frame: CGRectMake(0.0, 0.0, kBROptionsItemDefaultItemHeight, kBROptionsItemDefaultItemHeight))
         self.LayoutTheButton()
@@ -63,7 +62,6 @@ class BROptionsItem: UIButton {
     
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
         
-        println("Wut")
         for touch: AnyObject in touches {
             //var touch = touches.anyObject()
             var location = touch.locationInView(self.superview)
@@ -89,7 +87,7 @@ class BROptionsItem: UIButton {
             nextPoint.x += (self.frame.size.width/2);
             nextPoint.y += (self.frame.size.height/2);
             
-            nextPoint = self.convertPoint(nextPoint, fromView:self) //Check
+            nextPoint = self.superview!.convertPoint(nextPoint, fromView:self) //Check
             self.dragAttachement?.anchorPoint = nextPoint
             
             self.highlighted = false;

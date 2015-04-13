@@ -93,6 +93,7 @@ class BROptionsButton: UIButton {
             var item = self.tabBar.items?[self.locationIndexInTabBar] as UITabBarItem
             item.enabled = false
             var pointToSuperview = self.buttonLocationForIndex(self.locationIndexInTabBar)
+            pointToSuperview.x += 27.5 //This is a cheat
             var myRect = CGRectMake(pointToSuperview.x, pointToSuperview.y, 60, 60)
             self.frame = myRect
             self.center = pointToSuperview
@@ -101,13 +102,13 @@ class BROptionsButton: UIButton {
             self.backgroundColor = UIColor.blackColor()
             self.layer.cornerRadius = 6;
             self.clipsToBounds = true;
-            self.tabBar.addSubview(self);
+            self.tabBar.superview!.addSubview(self);
             self.addTarget(self, action: "buttonPressed", forControlEvents: .TouchUpInside)
             
             // Dynamic stuff
             //self.gravityBehavior = [[UIGravityBehavior alloc] init];
             //self.gravityBehavior.gravityDirection = CGVectorMake(0.0, -20);
-            self.dynamicsAnimator = UIDynamicAnimator(referenceView:self.tabBar);
+            self.dynamicsAnimator = UIDynamicAnimator(referenceView:self.tabBar.superview!)
             self.dynamicItem = UIDynamicItemBehavior()
             self.dynamicItem?.allowsRotation = false;
             
@@ -125,7 +126,7 @@ class BROptionsButton: UIButton {
     func buttonLocationForIndex(index:Int) -> CGPoint {
         var item = self.tabBar.items?[index] as UITabBarItem
         var view = item.valueForKey("view") as UIView
-        var pointToSuperview = self.tabBar.convertPoint(view.center, fromView:self.tabBar)
+        var pointToSuperview = self.tabBar.superview!.convertPoint(view.center, fromView:self.tabBar)
         return pointToSuperview;
     }
     
@@ -188,8 +189,6 @@ class BROptionsButton: UIButton {
     }
     
     func buttonPressed() {
-        
-        println("Button Pressed")
     
         if(self.currentState == BROptionsButtonState.BROptionsButtonStateNormal || self.currentState == BROptionsButtonState.BROptionsButtonStateClosed) {
             currentState = BROptionsButtonState.BROptionsButtonStateOpened;
@@ -235,7 +234,6 @@ class BROptionsButton: UIButton {
     //For timer
     func changeTheButtonStateAnimatedToOpenT(timer:NSTimer) {
         
-        println("Wut")
         var openImgCenter = self.openedStateImage!.center
         var closedImgCenter = self.closedStateImage!.center
         
@@ -269,7 +267,7 @@ class BROptionsButton: UIButton {
     func addBlackView() {
     
         self.enabled = false;
-        self.blackView = UIView(frame:self.tabBar.bounds)
+        self.blackView = UIView(frame:self.tabBar.superview!.bounds)
         self.blackView!.autoresizingMask = UIViewAutoresizing.FlexibleLeftMargin |
             UIViewAutoresizing.FlexibleRightMargin |
             UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight |
@@ -283,7 +281,7 @@ class BROptionsButton: UIButton {
         self.blackView!.addGestureRecognizer(tap)
     
         
-        self.tabBar.insertSubview(self.blackView!, belowSubview: self.tabBar)
+        self.tabBar.superview!.insertSubview(self.blackView!, belowSubview: self.tabBar)
         UIView.animateWithDuration(0.3, animations:{
                 self.blackView!.alpha = 0.7;
             }, completion:{
@@ -296,19 +294,18 @@ class BROptionsButton: UIButton {
 
     func removeBlackView() {
     
-        println("Remove Black view")
-    self.enabled = false;
-    UIView.animateWithDuration(0.3, animations:{
-        self.blackView!.alpha = 0.0
-    }, completion:
-        {
-            (finished: Bool) in
-            if(finished) {
-                self.blackView!.removeFromSuperview()
-                //self.blackView = nil; //CHECK
-                self.enabled = true;
+        self.enabled = false;
+        UIView.animateWithDuration(0.3, animations:{
+            self.blackView!.alpha = 0.0
+            }, completion: {
+                (finished: Bool) in
+                if(finished) {
+                    self.blackView!.removeFromSuperview()
+                    //self.blackView = nil; //CHECK
+                    self.enabled = true;
+                }
             }
-        });
+        );
     }
 
     func blackViewPressed() {
@@ -334,7 +331,7 @@ class BROptionsButton: UIButton {
             var wut = (angle * Double(i)) + (angle/2)
     
             var brOptionItem = self.createButtonItemAtIndex(i)
-            var mypoint = self.tabBar.convertPoint(self.center, fromView:self.superview) //Check
+            var mypoint = self.tabBar.superview!.convertPoint(self.center, fromView:self.superview!) //Check
             var x = mypoint.x + CGFloat(buttonX)
             var y = self.frame.origin.y - CGFloat(buttonY)
             var buttonPoint = CGPointMake(x, y)
@@ -357,7 +354,7 @@ class BROptionsButton: UIButton {
                 //self.delegate.brOptionsButton(self, willDisplayButtonItem:brOptionItem)
             //}
         
-            self.tabBar.insertSubview(brOptionItem, belowSubview: self.tabBar)
+            self.tabBar.superview!.insertSubview(brOptionItem, belowSubview: self.tabBar)
 
             self.dynamicsAnimator!.addBehavior(attachment)
             self.items.addObject(brOptionItem)
@@ -404,7 +401,7 @@ class BROptionsButton: UIButton {
         
                 for(var i = 0; i<self.items.count; i++) {
                     var item = self.items[i] as UIView
-                    item.center = self.tabBar.convertPoint(self.center, fromView:self.superview)
+                    item.center = self.tabBar.superview!.convertPoint(self.center, fromView:self.superview)
                     count++
                 }
             }, completion: {
@@ -442,12 +439,11 @@ class BROptionsButton: UIButton {
             self.layoutIfNeeded()
             button.transform = CGAffineTransformMakeScale(5, 5)
             button.alpha  = 0.0
-            button.center = CGPointMake(button.frame.size.width/2 + button.frame.size.width/2, button.frame.size.height/2)
+            button.center = CGPointMake(button.superview!.frame.size.width/2 + button.frame.size.width/2, button.superview!.frame.size.height/2)
         }, completion:{
             (finished: Bool) in
             if(finished) {
                 button.removeFromSuperview()
-                println("Animation Complete")
             }
         })
     }
