@@ -367,8 +367,6 @@ class BROptionsButton: UIButton {
     * and customise it
     */
     func createButtonItemAtIndex(indexz:NSInteger) -> BROptionsItem {
-        
-        println("Create button item at index")
     
         var brOptionItem = BROptionsItem(initWithIndex:indexz)
         brOptionItem.addTarget(self, action:"buttonItemPressed:", forControlEvents:.TouchUpInside)
@@ -427,7 +425,6 @@ class BROptionsButton: UIButton {
     
     func buttonItemPressed(button:BROptionsItem) {
         
-        println("Button Item Pressed")
         // removing the object will not animate it with others
         self.items.removeObject(button)
         self.dynamicsAnimator!.removeBehavior(button.attachment)
